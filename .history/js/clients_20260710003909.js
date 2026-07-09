@@ -27,8 +27,6 @@ async function loadClients() {
 
     try {
         const response = await fetch('https://dummyjson.com/users?limit=30');
-
-        
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
