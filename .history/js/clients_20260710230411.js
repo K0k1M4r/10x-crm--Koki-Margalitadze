@@ -224,35 +224,3 @@ document.addEventListener('click', function(e) {
         deleteClient(clientId);
     }
 });
-
-async function deleteClient(clientId) {
-
-    const confirmed = confirm("Are you sure you want to delete this client?");
-
-    if (!confirmed) return;
-
-    try {
-
-        await fetch(`https://dummyjson.com/users/${clientId}`, {
-            method: 'DELETE'
-        });
-
-
-        clientsState = clientsState.filter(client => client.id !== clientId);
-
-
-        CRMStorage.setClients(clientsState);
-
-
-        renderClients(clientsState);
-
-
-        window.showToast('Client deleted ✓', 'success');
-
-
-    } catch (err) {
-
-        window.showToast('Could not delete client. Please try again.', 'error');
-
-    }
-}
