@@ -270,7 +270,7 @@ addClientForm.addEventListener('submit', async function (e) {
 
         clientsState.unshift(newClient);
         CRMStorage.setClients(clientsState);
-        renderClients(getVisibleClients());
+        renderClients(clientsState);
         closeAddClientModal();
         window.showToast('Client added ✓', 'success');
 
@@ -307,7 +307,7 @@ async function deleteClient(clientId) {
         CRMStorage.setClients(clientsState);
 
 
-        renderClients(getVisibleClients());
+        renderClients(clientsState);
 
 
         window.showToast('Client deleted ✓', 'success');
@@ -334,7 +334,7 @@ document.addEventListener('change', function(e) {
 
             CRMStorage.setClients(clientsState);
 
-            renderClients(getVisibleClients());
+            renderClients(clientsState);
 
             window.showToast('Client status updated ✓', 'success');
         }
@@ -345,33 +345,6 @@ document.addEventListener('change', function(e) {
 searchInput.addEventListener('input', function(e) {
 
     currentSearchTerm = e.target.value.trim();
-
-    renderClients(getVisibleClients());
-
-});
-
-filterChips.forEach(chip => {
-
-    chip.addEventListener('click', function() {
-
-        filterChips.forEach(c => c.classList.remove('active'));
-
-        this.classList.add('active');
-
-
-        currentStatusFilter = this.dataset.status;
-
-
-        renderClients(getVisibleClients());
-
-    });
-
-});
-
-
-sortSelect.addEventListener('change', function(e) {
-
-    currentSort = e.target.value;
 
     renderClients(getVisibleClients());
 

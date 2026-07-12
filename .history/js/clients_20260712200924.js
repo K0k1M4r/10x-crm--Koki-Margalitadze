@@ -307,7 +307,7 @@ async function deleteClient(clientId) {
         CRMStorage.setClients(clientsState);
 
 
-        renderClients(getVisibleClients());
+        renderClients(clientsState);
 
 
         window.showToast('Client deleted ✓', 'success');

@@ -307,7 +307,7 @@ async function deleteClient(clientId) {
         CRMStorage.setClients(clientsState);
 
 
-        renderClients(getVisibleClients());
+        renderClients(clientsState);
 
 
         window.showToast('Client deleted ✓', 'success');
@@ -334,7 +334,7 @@ document.addEventListener('change', function(e) {
 
             CRMStorage.setClients(clientsState);
 
-            renderClients(getVisibleClients());
+            renderClients(clientsState);
 
             window.showToast('Client status updated ✓', 'success');
         }

@@ -110,64 +110,10 @@ function renderClients(list) {
     container.appendChild(grid);
 }
 
-
-function getVisibleClients() {
-
-    let visibleClients = [...clientsState];
-
-
-    // 1. Status filter
-    if (currentStatusFilter !== 'All') {
-        visibleClients = visibleClients.filter(client =>
-            client.status === currentStatusFilter
-        );
-    }
-
-
-    // 2. Search filter
-    if (currentSearchTerm) {
-
-        const search = currentSearchTerm.toLowerCase();
-
-        visibleClients = visibleClients.filter(client =>
-            client.name.toLowerCase().includes(search) ||
-            client.company.toLowerCase().includes(search)
-        );
-    }
-
-
-    // 3. Sorting
-    if (currentSort === 'name') {
-
-        visibleClients.sort((a, b) =>
-            a.name.localeCompare(b.name)
-        );
-
-    } else if (currentSort === 'value') {
-
-        visibleClients.sort((a, b) =>
-            b.dealValue - a.dealValue
-        );
-
-    } else if (currentSort === 'newest') {
-
-        visibleClients.sort((a, b) =>
-            new Date(b.createdAt) - new Date(a.createdAt)
-        );
-
-    }
-
-
-    return visibleClients;
-}
-
 // ===== ADD CLIENT MODAL =====
 
 const addClientModal = document.getElementById('add-client-modal');
 const addClientBtn = document.getElementById('add-client-btn');
-const searchInput = document.getElementById('client-search');
-const filterChips = document.querySelectorAll('.chip');
-const sortSelect = document.getElementById('sort-select');
 const addClientForm = document.getElementById('add-client-form');
 const addClientErrorBox = document.getElementById('add-client-error-box');
 const addClientErrorList = document.getElementById('add-client-error-list');
@@ -270,7 +216,7 @@ addClientForm.addEventListener('submit', async function (e) {
 
         clientsState.unshift(newClient);
         CRMStorage.setClients(clientsState);
-        renderClients(getVisibleClients());
+        renderClients(clientsState);
         closeAddClientModal();
         window.showToast('Client added ✓', 'success');
 
@@ -307,7 +253,7 @@ async function deleteClient(clientId) {
         CRMStorage.setClients(clientsState);
 
 
-        renderClients(getVisibleClients());
+        renderClients(clientsState);
 
 
         window.showToast('Client deleted ✓', 'success');
@@ -334,45 +280,10 @@ document.addEventListener('change', function(e) {
 
             CRMStorage.setClients(clientsState);
 
-            renderClients(getVisibleClients());
+            renderClients(clientsState);
 
             window.showToast('Client status updated ✓', 'success');
         }
     }
-
-});
-
-searchInput.addEventListener('input', function(e) {
-
-    currentSearchTerm = e.target.value.trim();
-
-    renderClients(getVisibleClients());
-
-});
-
-filterChips.forEach(chip => {
-
-    chip.addEventListener('click', function() {
-
-        filterChips.forEach(c => c.classList.remove('active'));
-
-        this.classList.add('active');
-
-
-        currentStatusFilter = this.dataset.status;
-
-
-        renderClients(getVisibleClients());
-
-    });
-
-});
-
-
-sortSelect.addEventListener('change', function(e) {
-
-    currentSort = e.target.value;
-
-    renderClients(getVisibleClients());
 
 });

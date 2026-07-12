@@ -270,7 +270,7 @@ addClientForm.addEventListener('submit', async function (e) {
 
         clientsState.unshift(newClient);
         CRMStorage.setClients(clientsState);
-        renderClients(getVisibleClients());
+        renderClients(clientsState);
         closeAddClientModal();
         window.showToast('Client added ✓', 'success');
 
@@ -307,7 +307,7 @@ async function deleteClient(clientId) {
         CRMStorage.setClients(clientsState);
 
 
-        renderClients(getVisibleClients());
+        renderClients(clientsState);
 
 
         window.showToast('Client deleted ✓', 'success');
@@ -334,7 +334,7 @@ document.addEventListener('change', function(e) {
 
             CRMStorage.setClients(clientsState);
 
-            renderClients(getVisibleClients());
+            renderClients(clientsState);
 
             window.showToast('Client status updated ✓', 'success');
         }
@@ -365,14 +365,5 @@ filterChips.forEach(chip => {
         renderClients(getVisibleClients());
 
     });
-
-});
-
-
-sortSelect.addEventListener('change', function(e) {
-
-    currentSort = e.target.value;
-
-    renderClients(getVisibleClients());
 
 });
