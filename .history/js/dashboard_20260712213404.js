@@ -7,19 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
         greeting.innerText = `Welcome back, ${session.fullName.split(' ')[0]}!`;
     }
 
-    const clients = CRMStorage.getClients();
-
-    document.getElementById('stat-total-clients').innerText = clients.length;
-
-    const activeDeals = clients.filter(client =>
-        client.status !== 'Won' &&
-        client.status !== 'Lost'
-    ).length;
-    
-    document.getElementById('stat-active-deals').innerText = activeDeals;
-
-    renderPipeline(clients);
-
 });
 
 const clock = document.getElementById('live-clock');
