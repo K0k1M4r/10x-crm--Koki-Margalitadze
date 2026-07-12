@@ -261,25 +261,3 @@ async function deleteClient(clientId) {
 
     }
 }
-
-document.addEventListener('change', function(e) {
-
-    if (e.target.classList.contains('client-status-select')) {
-
-        const clientId = Number(e.target.dataset.id);
-        const newStatus = e.target.value;
-
-        const client = clientsState.find(c => c.id === clientId);
-
-        if (client) {
-            client.status = newStatus;
-
-            CRMStorage.setClients(clientsState);
-
-            renderClients(clientsState);
-
-            window.showToast('Client status updated ✓', 'success');
-        }
-    }
-
-});

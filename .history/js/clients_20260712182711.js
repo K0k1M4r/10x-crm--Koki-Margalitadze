@@ -89,11 +89,11 @@ function renderClients(list) {
             </div>
             <div>${client.email}</div>
             <select class="client-status-select" data-id="${client.id}">
-                <option value="Lead" ${client.status === 'Lead' ? 'selected' : ''}>Lead</option>
-                <option value="Contacted" ${client.status === 'Contacted' ? 'selected' : ''}>Contacted</option>
-                <option value="Won" ${client.status === 'Won' ? 'selected' : ''}>Won</option>
-                <option value="Lost" ${client.status === 'Lost' ? 'selected' : ''}>Lost</option>
-            </select>
+    <option value="Lead" ${client.status === 'Lead' ? 'selected' : ''}>Lead</option>
+    <option value="Contacted" ${client.status === 'Contacted' ? 'selected' : ''}>Contacted</option>
+    <option value="Won" ${client.status === 'Won' ? 'selected' : ''}>Won</option>
+    <option value="Lost" ${client.status === 'Lost' ? 'selected' : ''}>Lost</option>
+</select>
             <div class="client-card-footer">
                 <span class="client-card-deal-value">$${client.dealValue.toLocaleString()}</span>
                 <button class="btn-logout delete-client-btn" data-id="${client.id}">Delete</button>
@@ -261,25 +261,3 @@ async function deleteClient(clientId) {
 
     }
 }
-
-document.addEventListener('change', function(e) {
-
-    if (e.target.classList.contains('client-status-select')) {
-
-        const clientId = Number(e.target.dataset.id);
-        const newStatus = e.target.value;
-
-        const client = clientsState.find(c => c.id === clientId);
-
-        if (client) {
-            client.status = newStatus;
-
-            CRMStorage.setClients(clientsState);
-
-            renderClients(clientsState);
-
-            window.showToast('Client status updated ✓', 'success');
-        }
-    }
-
-});
