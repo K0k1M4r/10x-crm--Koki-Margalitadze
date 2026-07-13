@@ -217,25 +217,3 @@ passwordChangeForm.addEventListener('submit', function(e) {
     window.showToast('Password changed ✓', 'success');
 
 });
-
-
-const resetDataBtn = document.getElementById('reset-data-btn');
-
-
-resetDataBtn.addEventListener('click', function() {
-
-    const confirmed = confirm(
-        'Are you sure you want to reset CRM data? All clients will be removed.'
-    );
-
-
-    if (!confirmed) return;
-
-
-    CRMStorage.remove('crm_clients');
-
-
-    window.showToast('CRM data reset ✓', 'success');
-
-
-});
