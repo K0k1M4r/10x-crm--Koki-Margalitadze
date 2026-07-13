@@ -184,29 +184,6 @@ addClientModal.addEventListener('click', (e) => {
     }
 });
 
-
-document.addEventListener('click', function(e) {
-
-    const card = e.target.closest('.client-card');
-
-    if (!card) return;
-
-
-    // Ignore clicks on buttons/selects inside the card
-    if (
-        e.target.classList.contains('delete-client-btn') ||
-        e.target.classList.contains('client-status-select')
-    ) {
-        return;
-    }
-
-
-    const clientId = Number(card.dataset.id);
-
-    openClientDetail(clientId);
-
-});
-
 function closeAddClientModal() {
     addClientModal.style.display = 'none';
     addClientForm.reset();
@@ -275,22 +252,13 @@ addClientForm.addEventListener('submit', async function (e) {
         const response = await fetch('https://dummyjson.com/users/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                firstName: name.split(' ')[0], 
-                lastName: name.split(' ').slice(1).join(' ') 
-            })
+            body: JSON.stringify({ firstName: name.split(' ')[0], lastName: name.split(' ').slice(1).join(' ') })
         });
-        
-        
-        if (!response.ok) {
-            throw new Error('Failed to create client');
-        }
-        
-        
+
         const result = await response.json();
 
         const newClient = {
-            id: Date.now(),
+            id: result.id,
             name: name,
             email: email,
             phone: phone,
@@ -328,24 +296,28 @@ async function deleteClient(clientId) {
 
     if (!confirmed) return;
 
-
     try {
+
+        await fetch(`https://dummyjson.com/users/${clientId}`, {
+            method: 'DELETE'
+        });
+
 
         clientsState = clientsState.filter(client => client.id !== clientId);
 
+
         CRMStorage.setClients(clientsState);
 
+
         renderClients(getVisibleClients());
+
 
         window.showToast('Client deleted ✓', 'success');
 
 
     } catch (err) {
 
-        window.showToast(
-            'Could not delete client. Please try again.',
-            'error'
-        );
+        window.showToast('Could not delete client. Please try again.', 'error');
 
     }
 }
@@ -406,122 +378,3 @@ sortSelect.addEventListener('change', function(e) {
     renderClients(getVisibleClients());
 
 });
-
-function openClientDetail(clientId) {
-
-    const client = clientsState.find(c => c.id === clientId);
-
-
-    if (!client) return;
-
-
-    clientDetailContent.innerHTML = `
-
-        <h2>${client.name}</h2>
-
-        <p><strong>Email:</strong> ${client.email}</p>
-
-        <p><strong>Phone:</strong> ${client.phone || 'No phone'}</p>
-
-        <p><strong>Company:</strong> ${client.company}</p>
-
-        <p><strong>Status:</strong> ${client.status}</p>
-
-        <p><strong>Deal Value:</strong> $${client.dealValue.toLocaleString()}</p>
-
-
-        <h3>Notes</h3>
-
-        <ul id="client-notes-list">
-            ${
-                client.notes.length > 0
-                ? client.notes.map(note => `<li>${note}</li>`).join('')
-                : '<li>No notes yet</li>'
-            }
-        </ul>
-
-
-        <input 
-            id="client-note-input"
-            class="form-control"
-            placeholder="Add a note..."
-        >
-
-
-        <button id="add-note-btn" class="btn btn-primary">
-            Add Note
-        </button>
-
-
-        <button id="reminder-btn" class="btn btn-primary">
-            Remind me in 1 min
-        </button>
-
-
-        <button id="close-detail-btn" class="btn-logout">
-            Close
-        </button>
-
-    `;
-
-
-    clientDetailModal.style.display = 'flex';
-
-
-
-    document.getElementById('close-detail-btn')
-        .addEventListener('click', () => {
-            clientDetailModal.style.display = 'none';
-        });
-
-
-
-    document.getElementById('add-note-btn')
-        .addEventListener('click', () => {
-
-            const input = document.getElementById('client-note-input');
-
-            const note = input.value.trim();
-
-
-            if (!note) return;
-
-
-            client.notes.push(note);
-
-
-            CRMStorage.setClients(clientsState);
-
-
-            openClientDetail(clientId);
-
-
-            window.showToast('Note added ✓', 'success');
-
-        });
-
-
-
-    document.getElementById('reminder-btn')
-        .addEventListener('click', () => {
-
-
-            window.showToast(
-                'Reminder set for 1 minute',
-                'success'
-            );
-
-
-            setTimeout(() => {
-
-                window.showToast(
-                    `Reminder: Follow up with ${client.name}`,
-                    'success'
-                );
-
-            }, 60000);
-
-
-        });
-
-}

@@ -328,24 +328,33 @@ async function deleteClient(clientId) {
 
     if (!confirmed) return;
 
-
     try {
+
+        const response = await fetch(`https://dummyjson.com/users/${clientId}`, {
+            method: 'DELETE'
+        });
+        
+        
+        if (!response.ok) {
+            throw new Error('Failed to delete client');
+        }
+
 
         clientsState = clientsState.filter(client => client.id !== clientId);
 
+
         CRMStorage.setClients(clientsState);
 
+
         renderClients(getVisibleClients());
+
 
         window.showToast('Client deleted ✓', 'success');
 
 
     } catch (err) {
 
-        window.showToast(
-            'Could not delete client. Please try again.',
-            'error'
-        );
+        window.showToast('Could not delete client. Please try again.', 'error');
 
     }
 }

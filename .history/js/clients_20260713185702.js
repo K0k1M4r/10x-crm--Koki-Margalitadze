@@ -290,7 +290,7 @@ addClientForm.addEventListener('submit', async function (e) {
         const result = await response.json();
 
         const newClient = {
-            id: Date.now(),
+            id: result.id,
             name: name,
             email: email,
             phone: phone,
@@ -328,24 +328,33 @@ async function deleteClient(clientId) {
 
     if (!confirmed) return;
 
-
     try {
+
+        const response = await fetch(`https://dummyjson.com/users/error/${clientId}`, {
+            method: 'DELETE'
+        });
+        
+        
+        if (!response.ok) {
+            throw new Error('Failed to delete client');
+        }
+
 
         clientsState = clientsState.filter(client => client.id !== clientId);
 
+
         CRMStorage.setClients(clientsState);
 
+
         renderClients(getVisibleClients());
+
 
         window.showToast('Client deleted ✓', 'success');
 
 
     } catch (err) {
 
-        window.showToast(
-            'Could not delete client. Please try again.',
-            'error'
-        );
+        window.showToast('Could not delete client. Please try again.', 'error');
 
     }
 }
