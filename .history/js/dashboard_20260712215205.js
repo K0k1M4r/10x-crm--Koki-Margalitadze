@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('stat-active-deals').innerText = activeDeals;
 
     renderPipeline(clients);
-    renderRecentClients(clients);
 
 });
 
@@ -90,45 +89,3 @@ function renderPipeline(clients) {
 
 }
 
-function renderRecentClients(clients) {
-
-    const container = document.getElementById('recent-clients-list');
-
-    container.innerHTML = '';
-
-    const recentClients = [...clients]
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 5);
-
-    recentClients.forEach(client => {
-
-        const card = document.createElement('div');
-
-        card.className = 'client-card';
-
-        card.innerHTML = `
-            <div class="client-card-header">
-                <img src="${client.image}" alt="${client.name}" class="client-card-avatar">
-
-                <div>
-                    <div class="client-card-name">${client.name}</div>
-                    <div class="client-card-company">${client.company}</div>
-                </div>
-            </div>
-
-            <div class="client-card-footer">
-                <span class="status-badge status-${client.status.toLowerCase()}">
-                    ${client.status}
-                </span>
-
-                <span class="client-card-deal-value">
-                    $${client.dealValue.toLocaleString()}
-                </span>
-            </div>
-        `;
-
-        container.appendChild(card);
-
-    });
-
-}
