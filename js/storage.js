@@ -19,6 +19,7 @@ const CRMStorage = {
     getTheme() { return localStorage.getItem('crm_theme') || 'light'; },
     setTheme(theme) { localStorage.setItem('crm_theme', theme); }
 };
-
+// get is for getting items 
+// set is for remembering the state they are in after refreash or an update
 // This line registers it so signup.js can find it!
 window.CRMStorage = CRMStorage;
