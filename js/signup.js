@@ -45,7 +45,7 @@ document.getElementById('signup-form').addEventListener('submit', function(e) {
     // Check if user already exists in storage to avoid duplicate signups
     const existingUsers = window.CRMStorage.getUsers();
     const emailExists = existingUsers.some(user => user.email.toLowerCase() === email.toLowerCase());
-    if (emailExists && email) {
+    if (emailExists) {
         errors.push("An account with this email already exists");
         document.getElementById('signup-email').classList.add('input-error');
     }

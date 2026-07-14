@@ -1,9 +1,10 @@
 (function() {
     // Read the current active session state directly from browser memory
+    // tests if there is crm_session
     const session = localStorage.getItem('crm_session');
     const currentPath = window.location.pathname;
     
-    // Evaluate if the user is currently targeting an open public gateway screen
+    // if the page is available to everyone with or without logging in
     const isPublicPage = currentPath.endsWith('index.html') || currentPath.endsWith('signup.html') || currentPath === '/' || currentPath.endsWith('index');
 
     if (!session && !isPublicPage) {
