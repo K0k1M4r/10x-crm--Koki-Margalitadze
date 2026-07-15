@@ -419,47 +419,47 @@ function openClientDetail(clientId) {
 
         <h2>${client.name}</h2>
 
-            <div class="client-detail-body">
+        <div class="client-detail-body">
 
-                <p><strong>Email:</strong> ${client.email}</p>
+            <p><strong>Email:</strong> ${client.email}</p>
 
-                <p><strong>Phone:</strong> ${client.phone || 'No phone'}</p>
+            <p><strong>Phone:</strong> ${client.phone || 'No phone'}</p>
 
-                <p><strong>Company:</strong> ${client.company}</p>
+            <p><strong>Company:</strong> ${client.company}</p>
 
-                <p><strong>Status:</strong> ${client.status}</p>
+            <p><strong>Status:</strong> ${client.status}</p>
 
-                <p><strong>Deal Value:</strong> $${client.dealValue.toLocaleString()}</p>
+            <p><strong>Deal Value:</strong> $${client.dealValue.toLocaleString()}</p>
 
-                <h3>Notes</h3>
+            <h3>Notes</h3>
 
-                <ul id="client-notes-list">
-                    ${
-                        client.notes.length > 0
-                        ? client.notes.map(note => `<li>${note}</li>`).join('')
-                        : '<li>No notes yet</li>'
-                    }
-                </ul>
+            <ul id="client-notes-list">
+                ${
+                    client.notes.length > 0
+                    ? client.notes.map(note => `<li>${note}</li>`).join('')
+                    : '<li>No notes yet</li>'
+                }
+            </ul>
 
-                <input
-                    id="client-note-input"
-                    class="form-control"
-                    placeholder="Add a note..."
-                >
+            <input
+                id="client-note-input"
+                class="form-control"
+                placeholder="Add a note..."
+            >
 
-                <button id="add-note-btn" class="btn btn-primary">
-                    Add Note
-                </button>
+            <button id="add-note-btn" class="btn btn-primary">
+                Add Note
+            </button>
 
-                <button id="reminder-btn" class="btn btn-primary">
-                    Remind me in 1 min
-                </button>
+            <button id="reminder-btn" class="btn btn-primary">
+                Remind me in 1 min
+            </button>
 
-                <button id="close-detail-btn" class="btn-logout">
-                    Close
-                </button>
+            <button id="close-detail-btn" class="btn-logout">
+                Close
+            </button>
 
-            </div>
+        </div>
 
     `;
 
