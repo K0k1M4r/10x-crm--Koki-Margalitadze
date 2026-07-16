@@ -5,6 +5,7 @@
 // Depends on: storage.js (window.CRMStorage), toast.js (window.showToast)
 
 let clientsState = [];
+
 let currentStatusFilter = 'All';
 let currentSearchTerm = '';
 let currentSort = 'newest';
@@ -18,6 +19,7 @@ async function loadClients() {
 
     // 1. Check localStorage first
     const stored = CRMStorage.getClients();
+
     if (stored && stored.length > 0) {
         clientsState = stored;
         renderClients(clientsState);
@@ -29,7 +31,10 @@ async function loadClients() {
 
     try {
         const response = await fetch('https://dummyjson.com/users?limit=30');
-        if (!response.ok) throw new Error('Network response was not ok');
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
 
         const data = await response.json();
 
@@ -49,6 +54,7 @@ async function loadClients() {
 
         // 4. Save to localStorage immediately
         CRMStorage.setClients(clientsState);
+
         renderClients(clientsState);
 
     } catch (err) {
@@ -76,6 +82,7 @@ function renderClients(list) {
         const card = document.createElement('div');
         card.className = 'client-card';
         card.dataset.id = client.id;
+
         card.innerHTML = `
             <div class="client-card-header">
                 <img src="${client.image}" alt="${client.name}" class="client-card-avatar">
@@ -96,39 +103,66 @@ function renderClients(list) {
                 <button class="btn-logout delete-client-btn" data-id="${client.id}">Delete</button>
             </div>
         `;
+
         grid.appendChild(card);
     });
 
     container.appendChild(grid);
 }
 
+
 function getVisibleClients() {
+
     let visibleClients = [...clientsState];
 
+
+    // 1. Status filter
     if (currentStatusFilter !== 'All') {
-        visibleClients = visibleClients.filter(client => client.status === currentStatusFilter);
+        visibleClients = visibleClients.filter(client =>
+            client.status === currentStatusFilter
+        );
     }
 
+
+    // 2. Search filter
     if (currentSearchTerm) {
+
         const search = currentSearchTerm.toLowerCase();
+
         visibleClients = visibleClients.filter(client =>
             client.name.toLowerCase().includes(search) ||
             client.company.toLowerCase().includes(search)
         );
     }
 
+
+    // 3. Sorting
     if (currentSort === 'name') {
-        visibleClients.sort((a, b) => a.name.localeCompare(b.name));
+
+        visibleClients.sort((a, b) =>
+            a.name.localeCompare(b.name)
+        );
+
     } else if (currentSort === 'value') {
-        visibleClients.sort((a, b) => b.dealValue - a.dealValue);
+
+        visibleClients.sort((a, b) =>
+            b.dealValue - a.dealValue
+        );
+
     } else if (currentSort === 'newest') {
-        visibleClients.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        visibleClients.sort((a, b) =>
+            new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
     }
+
 
     return visibleClients;
 }
 
-// ===== SHARED PAGE ELEMENTS =====
+// ===== ADD CLIENT MODAL =====
+
 const addClientModal = document.getElementById('add-client-modal');
 const clientDetailModal = document.getElementById('client-detail-modal');
 const clientDetailContent = document.getElementById('client-detail-content');
@@ -140,32 +174,37 @@ const addClientForm = document.getElementById('add-client-form');
 const addClientErrorBox = document.getElementById('add-client-error-box');
 const addClientErrorList = document.getElementById('add-client-error-list');
 
-// Cache the Add Client form's fields once, instead of re-querying each one
-// every time we validate or clear errors.
-const addClientFields = {
-    name: document.getElementById('client-name'),
-    email: document.getElementById('client-email'),
-    phone: document.getElementById('client-phone'),
-    company: document.getElementById('client-company'),
-    dealValue: document.getElementById('client-deal-value'),
-    status: document.getElementById('client-status'),
-};
-
 addClientBtn.addEventListener('click', () => {
     addClientModal.style.display = 'flex';
 });
 
 addClientModal.addEventListener('click', (e) => {
-    if (e.target === addClientModal) closeAddClientModal();
+    if (e.target === addClientModal) {
+        closeAddClientModal();
+    }
 });
 
-document.addEventListener('click', function (e) {
+
+document.addEventListener('click', function(e) {
+
     const card = e.target.closest('.client-card');
+
     if (!card) return;
-    if (e.target.classList.contains('delete-client-btn') || e.target.classList.contains('client-status-select')) {
+
+
+    // Ignore clicks on buttons/selects inside the card
+    if (
+        e.target.classList.contains('delete-client-btn') ||
+        e.target.classList.contains('client-status-select')
+    ) {
         return;
     }
-    openClientDetail(Number(card.dataset.id));
+
+
+    const clientId = Number(card.dataset.id);
+
+    openClientDetail(clientId);
+
 });
 
 function closeAddClientModal() {
@@ -177,18 +216,20 @@ function closeAddClientModal() {
 }
 
 function clearAddClientFieldErrors() {
-    Object.values(addClientFields).forEach(field => field.classList.remove('input-error'));
+    ['client-name', 'client-email', 'client-phone', 'client-deal-value'].forEach(id => {
+        document.getElementById(id).classList.remove('input-error');
+    });
 }
 
 addClientForm.addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const name = addClientFields.name.value.trim();
-    const email = addClientFields.email.value.trim().toLowerCase();
-    const phone = addClientFields.phone.value.trim();
-    const company = addClientFields.company.value.trim();
-    const dealValueRaw = addClientFields.dealValue.value.trim();
-    const status = addClientFields.status.value;
+    const name = document.getElementById('client-name').value.trim();
+    const email = document.getElementById('client-email').value.trim().toLowerCase();
+    const phone = document.getElementById('client-phone').value.trim();
+    const company = document.getElementById('client-company').value.trim();
+    const dealValueRaw = document.getElementById('client-deal-value').value.trim();
+    const status = document.getElementById('client-status').value;
 
     addClientErrorList.innerHTML = '';
     addClientErrorBox.style.display = 'none';
@@ -198,26 +239,26 @@ addClientForm.addEventListener('submit', async function (e) {
 
     if (!name || name.length < 3) {
         errors.push('Name must be at least 3 characters');
-        addClientFields.name.classList.add('input-error');
+        document.getElementById('client-name').classList.add('input-error');
     }
 
     if (!email || !email.includes('@') || !email.split('@')[1]?.includes('.')) {
         errors.push('Please enter a valid email address');
-        addClientFields.email.classList.add('input-error');
+        document.getElementById('client-email').classList.add('input-error');
     } else if (clientsState.some(c => c.email.toLowerCase() === email)) {
         errors.push('A client with this email already exists');
-        addClientFields.email.classList.add('input-error');
+        document.getElementById('client-email').classList.add('input-error');
     }
 
     if (phone && phone.length < 6) {
         errors.push('Phone number looks too short');
-        addClientFields.phone.classList.add('input-error');
+        document.getElementById('client-phone').classList.add('input-error');
     }
 
     const dealValue = Number(dealValueRaw);
     if (!dealValueRaw || isNaN(dealValue) || dealValue <= 0) {
         errors.push('Deal value must be a positive number');
-        addClientFields.dealValue.classList.add('input-error');
+        document.getElementById('client-deal-value').classList.add('input-error');
     }
 
     if (errors.length > 0) {
@@ -234,19 +275,29 @@ addClientForm.addEventListener('submit', async function (e) {
         const response = await fetch('https://dummyjson.com/users/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                firstName: name.split(' ')[0],
-                lastName: name.split(' ').slice(1).join(' '),
-            }),
+            body: JSON.stringify({ 
+                firstName: name.split(' ')[0], 
+                lastName: name.split(' ').slice(1).join(' ') 
+            })
         });
-
-        if (!response.ok) throw new Error('Failed to create client');
-
+        
+        
+        if (!response.ok) {
+            throw new Error('Failed to create client');
+        }
+        
+        
         const result = await response.json();
+
         const newClient = {
             id: result.id,
-            name, email, phone, company, status, dealValue,
+            name: name,
+            email: email,
+            phone: phone,
+            company: company,
             image: 'https://dummyjson.com/icon/user/128',
+            status: status,
+            dealValue: dealValue,
             notes: [],
             createdAt: new Date().toISOString(),
         };
@@ -262,21 +313,24 @@ addClientForm.addEventListener('submit', async function (e) {
     }
 });
 
-document.addEventListener('click', function (e) {
+
+document.addEventListener('click', function(e) {
     if (e.target.classList.contains('delete-client-btn')) {
-        deleteClient(Number(e.target.dataset.id));
+        const clientId = Number(e.target.dataset.id);
+
+        deleteClient(clientId);
     }
 });
 
 async function deleteClient(clientId) {
-    const confirmed = confirm('Delete this client? This cannot be undone.');
+    const confirmed = confirm("Delete this client? This cannot be undone.");
     if (!confirmed) return;
 
     try {
-        // DummyJSON may 404 on IDs it never actually stored (e.g. ones you added)
-        // — that's expected, so we remove locally regardless of the response.
-        await fetch(`https://dummyjson.com/users/${clientId}`, { method: 'DELETE' });
-
+        const response = await fetch(`https://dummyjson.com/users/${clientId}`, {
+            method: 'DELETE'
+        });
+        // DummyJSON may 404 on IDs it never actually stored (e.g. ones you added) — that's expected, remove locally regardless
         clientsState = clientsState.filter(client => client.id !== clientId);
         CRMStorage.setClients(clientsState);
         renderClients(getVisibleClients());
@@ -286,83 +340,164 @@ async function deleteClient(clientId) {
     }
 }
 
-document.addEventListener('change', function (e) {
+document.addEventListener('change', function(e) {
+
     if (e.target.classList.contains('client-status-select')) {
-        const client = clientsState.find(c => c.id === Number(e.target.dataset.id));
+
+        const clientId = Number(e.target.dataset.id);
+        const newStatus = e.target.value;
+
+        const client = clientsState.find(c => c.id === clientId);
+
         if (client) {
-            client.status = e.target.value;
+            client.status = newStatus;
+
             CRMStorage.setClients(clientsState);
+
             renderClients(getVisibleClients());
+
             window.showToast('Client status updated ✓', 'success');
         }
     }
+
 });
 
-searchInput.addEventListener('input', function (e) {
+searchInput.addEventListener('input', function(e) {
+
     currentSearchTerm = e.target.value.trim();
+
     renderClients(getVisibleClients());
+
 });
 
 filterChips.forEach(chip => {
-    chip.addEventListener('click', function () {
+
+    chip.addEventListener('click', function() {
+
         filterChips.forEach(c => c.classList.remove('active'));
+
         this.classList.add('active');
+
+
         currentStatusFilter = this.dataset.status;
+
+
         renderClients(getVisibleClients());
+
     });
+
 });
 
-sortSelect.addEventListener('change', function (e) {
+
+sortSelect.addEventListener('change', function(e) {
+
     currentSort = e.target.value;
+
     renderClients(getVisibleClients());
+
 });
 
 function openClientDetail(clientId) {
+
     const client = clientsState.find(c => c.id === clientId);
+
+
     if (!client) return;
 
+
     clientDetailContent.innerHTML = `
+
         <h2>${client.name}</h2>
-        <div class="client-detail-body">
-            <p><strong>Email:</strong> ${client.email}</p>
-            <p><strong>Phone:</strong> ${client.phone || 'No phone'}</p>
-            <p><strong>Company:</strong> ${client.company}</p>
-            <p><strong>Status:</strong> ${client.status}</p>
-            <p><strong>Deal Value:</strong> $${client.dealValue.toLocaleString()}</p>
-            <h3>Notes</h3>
-            <ul id="client-notes-list">
-                ${client.notes.length > 0
-                    ? client.notes.map(note => `<li>${note.text} <small>(${note.date})</small></li>`).join('')
-                    : '<li>No notes yet</li>'}
-            </ul>
-            <input id="client-note-input" class="form-control" placeholder="Add a note...">
-            <button id="add-note-btn" class="btn btn-primary">Add Note</button>
-            <button id="reminder-btn" class="btn btn-primary">Remind me in 1 min</button>
-            <button id="close-detail-btn" class="btn-logout">Close</button>
-        </div>
+
+            <div class="client-detail-body">
+
+                <p><strong>Email:</strong> ${client.email}</p>
+
+                <p><strong>Phone:</strong> ${client.phone || 'No phone'}</p>
+
+                <p><strong>Company:</strong> ${client.company}</p>
+
+                <p><strong>Status:</strong> ${client.status}</p>
+
+                <p><strong>Deal Value:</strong> $${client.dealValue.toLocaleString()}</p>
+
+                <h3>Notes</h3>
+
+                <ul id="client-notes-list">
+                    ${
+                        client.notes.length > 0
+                        ? client.notes.map(note => `<li>${note.text} <small>(${note.date})</small></li>`).join('')
+                        : '<li>No notes yet</li>'
+                    }
+                </ul>
+
+                <input
+                    id="client-note-input"
+                    class="form-control"
+                    placeholder="Add a note..."
+                >
+
+                <button id="add-note-btn" class="btn btn-primary">
+                    Add Note
+                </button>
+
+                <button id="reminder-btn" class="btn btn-primary">
+                    Remind me in 1 min
+                </button>
+
+                <button id="close-detail-btn" class="btn-logout">
+                    Close
+                </button>
+
+            </div>
+
     `;
+
 
     clientDetailModal.style.display = 'flex';
 
-    document.getElementById('close-detail-btn').addEventListener('click', () => {
-        clientDetailModal.style.display = 'none';
-    });
 
-    document.getElementById('add-note-btn').addEventListener('click', () => {
-        const input = document.getElementById('client-note-input');
-        const text = input.value.trim();
-        if (!text) return;
 
-        client.notes.push({ text, date: new Date().toLocaleString() });
-        CRMStorage.setClients(clientsState);
-        openClientDetail(clientId);
-        window.showToast('Note added ✓', 'success');
-    });
+    document.getElementById('close-detail-btn')
+        .addEventListener('click', () => {
+            clientDetailModal.style.display = 'none';
+        });
 
-    document.getElementById('reminder-btn').addEventListener('click', () => {
-        window.showToast('Reminder set for 1 minute', 'success');
-        setTimeout(() => {
-            window.showToast(`Reminder: Follow up with ${client.name}`, 'success');
-        }, 60000);
-    });
+
+
+    document.getElementById('add-note-btn')
+        .addEventListener('click', () => {
+            const input = document.getElementById('client-note-input');
+            const text = input.value.trim();
+            if (!text) return;
+            client.notes.push({ text, date: new Date().toLocaleString() });
+            CRMStorage.setClients(clientsState);
+            openClientDetail(clientId);
+            window.showToast('Note added ✓', 'success');
+        });
+
+
+
+    document.getElementById('reminder-btn')
+        .addEventListener('click', () => {
+
+
+            window.showToast(
+                'Reminder set for 1 minute',
+                'success'
+            );
+
+
+            setTimeout(() => {
+
+                window.showToast(
+                    `Reminder: Follow up with ${client.name}`,
+                    'success'
+                );
+
+            }, 60000);
+
+
+        });
+
 }
