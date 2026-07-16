@@ -426,7 +426,7 @@ function openClientDetail(clientId) {
                 <ul id="client-notes-list">
                     ${
                         client.notes.length > 0
-                        ? client.notes.map(note => `<li>${note.text} <small>(${note.date})</small></li>`).join('')
+                        ? client.notes.map(note => `<li>${note}</li>`).join('')
                         : '<li>No notes yet</li>'
                     }
                 </ul>
@@ -465,8 +465,7 @@ function openClientDetail(clientId) {
 
 
 
-    document.getElementById('add-note-btn')
-        .addEventListener('click', () => {
+    document.getElementById('add-note-btn').addEventListener('click', () => {
             const input = document.getElementById('client-note-input');
             const text = input.value.trim();
             if (!text) return;
