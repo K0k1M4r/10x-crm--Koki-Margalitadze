@@ -290,7 +290,7 @@ addClientForm.addEventListener('submit', async function (e) {
         const result = await response.json();
 
         const newClient = {
-            id: result.id,
+            id: Date.now(),
             name: name,
             email: email,
             phone: phone,
