@@ -153,6 +153,7 @@ passwordChangeForm.addEventListener('submit', function(e) {
 
 
     // Rule 1: Current password must match
+
     if (currentPassword !== currentUser.password) {
         errors.push('Current password is incorrect');
     }

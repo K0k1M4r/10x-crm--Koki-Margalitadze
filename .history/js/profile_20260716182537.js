@@ -153,20 +153,21 @@ passwordChangeForm.addEventListener('submit', function(e) {
 
 
     // Rule 1: Current password must match
+
     if (currentPassword !== currentUser.password) {
         errors.push('Current password is incorrect');
     }
 
 
    // Rule 2: length + letter + number, combined into one message per spec
-    if (!newPassword || newPassword.length < 8 || !/[a-zA-Z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
+   if (!newPassword || newPassword.length < 8 || !/[a-zA-Z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
     errors.push('Password must be at least 8 characters and contain a letter and a number');
-    }
+}
 
-    // Rule 3: must differ from current
-    if (newPassword === currentPassword) {
-        errors.push('New password must be different from the current one');
-    }
+// Rule 3: must differ from current
+if (newPassword === currentPassword) {
+    errors.push('New password must be different from the current one');
+}
 
 
     // Rule 4: Confirmation match

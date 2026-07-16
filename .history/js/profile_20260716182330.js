@@ -62,9 +62,6 @@ profileEditForm.addEventListener('submit', function(e) {
     }
 
 
-    if (!newCompany) {
-        errors.push('Company is required');
-    }
 
 
     if (errors.length > 0) {
@@ -153,19 +150,23 @@ passwordChangeForm.addEventListener('submit', function(e) {
 
 
     // Rule 1: Current password must match
+
     if (currentPassword !== currentUser.password) {
         errors.push('Current password is incorrect');
     }
 
 
-   // Rule 2: length + letter + number, combined into one message per spec
-    if (!newPassword || newPassword.length < 8 || !/[a-zA-Z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
-    errors.push('Password must be at least 8 characters and contain a letter and a number');
+    // Rule 2: New password length
+
+    if (!newPassword || newPassword.length < 8) {
+        errors.push('Password must be at least 8 characters');
     }
 
-    // Rule 3: must differ from current
-    if (newPassword === currentPassword) {
-        errors.push('New password must be different from the current one');
+
+    // Rule 3: Must contain letter and number
+
+    if (!/[a-zA-Z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
+        errors.push('Password must contain a letter and a number');
     }
 
 
