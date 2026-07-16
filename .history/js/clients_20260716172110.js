@@ -322,23 +322,7 @@ document.addEventListener('click', function(e) {
     }
 });
 
-async function deleteClient(clientId) {
-    const confirmed = confirm("Delete this client? This cannot be undone.");
-    if (!confirmed) return;
 
-    try {
-        const response = await fetch(`https://dummyjson.com/users/${clientId}`, {
-            method: 'DELETE'
-        });
-        // DummyJSON may 404 on IDs it never actually stored (e.g. ones you added) — that's expected, remove locally regardless
-        clientsState = clientsState.filter(client => client.id !== clientId);
-        CRMStorage.setClients(clientsState);
-        renderClients(getVisibleClients());
-        window.showToast('Client deleted', 'success');
-    } catch (err) {
-        window.showToast('Could not delete client. Please try again.', 'error');
-    }
-}
 
 document.addEventListener('change', function(e) {
 
