@@ -9,7 +9,9 @@ const CRMStorage = {
     remove(key) {
         localStorage.removeItem(key);
     },
+    // get-s don't have parameter because we are just saying go grab those !
     getUsers() { return this.get('crm_users') || []; },
+    // set-s have parameter because we say we saving the state of this specific element!
     setUsers(users) { this.set('crm_users', users); },
     getSession() { return this.get('crm_session'); },
     setSession(session) { this.set('crm_session', session); },
@@ -21,5 +23,6 @@ const CRMStorage = {
 };
 // get is for getting items 
 // set is for remembering the state they are in after refreash or an update
+
 // This line registers it so signup.js can find it!
 window.CRMStorage = CRMStorage;

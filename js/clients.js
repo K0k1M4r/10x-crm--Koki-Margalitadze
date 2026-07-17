@@ -5,6 +5,7 @@
 // Depends on: storage.js (window.CRMStorage), toast.js (window.showToast)
 
 let clientsState = [];
+// switch is off for catogory filtering
 let currentStatusFilter = 'All';
 let currentSearchTerm = '';
 let currentSort = 'newest';
@@ -62,13 +63,19 @@ async function loadClients() {
 
 function renderClients(list) {
     const container = document.getElementById('clients-list-container');
+    
+    // this is here to provide constant refresh
+    // everytime we update the clients list - this code says : we start from scratch
     container.innerHTML = '';
 
+
+    // essential code in every function where there is a posibility of the abcens of the very thing the function summons!
     if (list.length === 0) {
         container.innerHTML = '<p>No clients found.</p>';
         return;
     }
 
+    
     const grid = document.createElement('div');
     grid.className = 'clients-grid';
 
@@ -105,10 +112,11 @@ function renderClients(list) {
 function getVisibleClients() {
     let visibleClients = [...clientsState];
 
+    // if we turn on category filtering then we will only see those categories we selected
     if (currentStatusFilter !== 'All') {
         visibleClients = visibleClients.filter(client => client.status === currentStatusFilter);
     }
-
+    
     if (currentSearchTerm) {
         const search = currentSearchTerm.toLowerCase();
         visibleClients = visibleClients.filter(client =>
@@ -168,6 +176,11 @@ document.addEventListener('click', function (e) {
     openClientDetail(Number(card.dataset.id));
 });
 
+clientDetailModal.addEventListener('click', (e) => {
+    if (e.target === clientDetailModal) closeClientDetailModal();  
+});
+
+
 function closeAddClientModal() {
     addClientModal.style.display = 'none';
     addClientForm.reset();
@@ -175,6 +188,13 @@ function closeAddClientModal() {
     addClientErrorBox.style.display = 'none';
     clearAddClientFieldErrors();
 }
+
+function closeClientDetailModal() {
+    clientDetailModal.style.display = 'none';
+    clientDetailContent.reset();
+
+}
+
 
 function clearAddClientFieldErrors() {
     Object.values(addClientFields).forEach(field => field.classList.remove('input-error'));
