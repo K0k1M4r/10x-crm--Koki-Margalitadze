@@ -10,9 +10,9 @@ let currentStatusFilter = 'All';
 let currentSearchTerm = '';
 let currentSort = 'newest';
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadClients();
-});
+// document.addEventListener('DOMContentLoaded', () => {
+//     loadClients();
+// });
 
 async function loadClients() {
     const container = document.getElementById('clients-list-container');
@@ -30,10 +30,7 @@ async function loadClients() {
 
     try {
         const response = await fetch('https://dummyjson.com/users?limit=30');
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+        if (!response.ok) throw new Error('Network response was not ok');
 
         const data = await response.json();
 

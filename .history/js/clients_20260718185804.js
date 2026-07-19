@@ -26,14 +26,11 @@ async function loadClients() {
     }
 
     // 2. No stored clients — fetch from API
-    // container.innerHTML = '<p id="clients-loading-msg">Loading clients...</p>';
+    container.innerHTML = '<p id="clients-loading-msg">Loading clients...</p>';
 
     try {
         const response = await fetch('https://dummyjson.com/users?limit=30');
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+        if (!response.ok) throw new Error('Network response was not ok');
 
         const data = await response.json();
 

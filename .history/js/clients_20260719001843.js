@@ -309,6 +309,7 @@ async function deleteClient(clientId) {
 }
 
 document.addEventListener('change', function (e) {
+    console.log(e);
     if (e.target.classList.contains('client-status-select')) {
         const client = clientsState.find(c => c.id === Number(e.target.dataset.id));
         if (client) {

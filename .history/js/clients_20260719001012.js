@@ -377,7 +377,7 @@ function openClientDetail(clientId) {
 
         client.notes.push({ text, date: new Date().toLocaleString() });
         CRMStorage.setClients(clientsState);
-        openClientDetail(clientId);
+        // openClientDetail(clientId);
         window.showToast('Note added ✓', 'success');
     });
 
