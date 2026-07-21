@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const next = current === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
             CRMStorage.setTheme(next);
-            updateThemeIcon(next);
         });
     }
 
@@ -32,10 +31,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
-function updateThemeIcon(theme) {
-    const themeBtn = document.getElementById('theme-toggle');
-    if (themeBtn) {
-        themeBtn.innerText = theme === 'dark' ? '☀️' : '🌙';
-    }
-}

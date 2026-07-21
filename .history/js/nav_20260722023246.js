@@ -32,10 +32,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
-function updateThemeIcon(theme) {
-    const themeBtn = document.getElementById('theme-toggle');
-    if (themeBtn) {
-        themeBtn.innerText = theme === 'dark' ? '☀️' : '🌙';
-    }
-}
