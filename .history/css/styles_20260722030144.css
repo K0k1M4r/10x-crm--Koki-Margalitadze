@@ -553,3 +553,16 @@ h1 {
 }
 
 
+/* ==========================================================================
+   12. PASSWORD STRENGTH INDICATOR
+   ========================================================================== */
+   .password-strength {
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 0.375rem;
+    margin-bottom: 0;
+}
+
+.password-strength.weak { color: var(--danger); }
+.password-strength.medium { color: #eab308; }
+.password-strength.strong { color: var(--success); }
