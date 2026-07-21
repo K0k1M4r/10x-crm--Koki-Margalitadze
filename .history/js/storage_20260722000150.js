@@ -26,23 +26,3 @@ const CRMStorage = {
 
 // This line registers it so signup.js can find it!
 window.CRMStorage = CRMStorage;
-
-
-// Seed a demo account on first load, so graders/testers can log in
-// without registering. Runs once — skips if it already exists.
-(function ensureDemoAccount() {
-    const users = CRMStorage.getUsers();
-    const demoExists = users.some(u => u.email === 'demo@test.com');
-
-    if (!demoExists) {
-        users.push({
-            id: Date.now(),
-            fullName: 'Demo User',
-            email: 'demo@test.com',
-            password: 'demo1234',
-            company: '10X Demo',
-            createdAt: new Date().toISOString(),
-        });
-        CRMStorage.setUsers(users);
-    }
-})();
