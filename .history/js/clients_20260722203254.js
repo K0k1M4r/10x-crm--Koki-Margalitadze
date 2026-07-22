@@ -4,7 +4,6 @@
 //
 // Depends on: storage.js (window.CRMStorage), toast.js (window.showToast)
 
-let clientsState = [];
 let currentStatusFilter = 'All';
 let currentSearchTerm = '';
 let currentSort = 'newest';
@@ -265,7 +264,7 @@ addClientForm.addEventListener('submit', async function (e) {
 
         const result = await response.json();
         const newClient = {
-            id: Date.now(),
+            id: result.id,
             name, email, phone, company, status, dealValue,
             image: 'https://dummyjson.com/icon/user/128',
             notes: [],

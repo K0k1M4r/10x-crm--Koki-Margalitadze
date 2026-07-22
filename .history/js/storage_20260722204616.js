@@ -20,7 +20,13 @@ const CRMStorage = {
     setClients(clients) { this.set('crm_clients', clients); },
     getTheme() { return localStorage.getItem('crm_theme') || 'light'; },
     setTheme(theme) { localStorage.setItem('crm_theme', theme); },
-
+    getList() {
+        return this.get('crm_list') || [];
+    },
+    
+    setList(list) {
+        this.set('crm_list', list);
+    },
 };
 // get is for getting items 
 // set is for remembering the state they are in after refreash or an update
@@ -47,5 +53,3 @@ window.CRMStorage = CRMStorage;
         CRMStorage.setUsers(users);
     }
 })();
-
-
