@@ -153,15 +153,16 @@ index.html
 
 # Live Demo
 
-Coming soon.
+10x-crm-koki-margalitadze-ouhy-olh0qgzcb.vercel.app
 
 ---
 
 # Test Account
 
-Create a new account through the Sign Up page.
+A demo account is automatically available — no registration needed:
 
-After registration, use the created account to log in and access the CRM dashboard.
+**Email:** demo@test.com
+**Password:** demo1234
 
 ---
 
